@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+{% form_theme registrationForm 'bootstrap_5_layout.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+<div class="mt-5 mb-5"></div>
+
+<main class="form-signin">
+    {% for flash_error in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+    <div class="card">
+        <div class="card-header d-flex justify-content-center">
+            <h1 class="h3 mb-3 fw-normal">Inscription</h1>
+        </div>
+        <div class="card-body">
+            {{ form_start(registrationForm) }}
+                {{ form_row(registrationForm.username) }}
+                {{ form_row(registrationForm.email) }}
+                {{ form_row(registrationForm.plainPassword) }}
+                {{ form_row(registrationForm.agreeTerms) }}
+                <button type="submit" class="btn w-100 btn-lg btn-primary">Register</button>
+            {{ form_end(registrationForm) }}    
+        </div>
+        <div class="card-footer">
+                <a class="btn btn-link btn-sm" href="{{path('app_login') }}">Connexion</a>
+                <a class="btn btn-link btn-sm" href="{{path('index') }}">Accueil</a>
+        </div>
+    </div>
+</main>
+{% endblock %}

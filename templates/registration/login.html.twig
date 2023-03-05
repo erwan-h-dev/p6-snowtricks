@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+
+
+<div class="mt-5 mb-5"></div>
+<main class="form-signin">
+    {% if error %}
+        <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+    <div class="card">
+        <div class="card-header d-flex justify-content-center">
+            <h1 class="h3 fw-normal">Connexion</h1>
+        </div>
+        <div class="card-body">
+            <form action="{{ path('app_login') }}" method="post">
+
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Mot de passe</label>
+                    <input type="password" class="form-control" id="password" name="_password">
+                    <a class="btn btn-link btn-sm" href="#">Mot de passe oublié?</a>
+                </div>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <button type="submit" class="w-100 btn btn-primary">login</button>
+            </form>
+        </div>
+        <div class="card-footer">
+                <a class="btn btn-link btn-sm" href="{{path('app_register') }}">Inscription</a>
+                <a class="btn btn-link btn-sm" href="{{path('index') }}">Accueil</a>
+        </div>
+    </div>
+
+</main>
+{% endblock %}
