@@ -26,3 +26,7 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+###> tricks/medias ###
+/public/images/uploads/*
+###< tricks/medias ###
