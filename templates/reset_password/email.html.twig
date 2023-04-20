@@ -1,0 +1,16 @@
+<h1>Demande de réinitialisation de mot de passe.</h1>
+
+<p>
+    Bonjour,<br>
+    Pour réinitialiser votre mot de passe, veuillez compléter votre demande en cliquant sur le lien ci-dessous :<br>
+    <br>
+    <a href="{{ url('app_reset_password', {token: resetToken.token}) }}">Modifier le mot de passe</a>
+    <br>
+    Si vous n'êtes pas à l'origine de cette demande, veuillez ignorer ce message .<br>
+    <br>
+    Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+</p>
+<p>
+    Cordialement,<br>
+    L'équipe Snowtricks.
+</p>

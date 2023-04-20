@@ -3,10 +3,7 @@
 {% block title %}Connexion{% endblock %}
 
 {% block body %}
-
-
-<div class="mt-5 mb-5"></div>
-<main class="form-signin">
+<main class="form-signin pt-5 mt-5">
     {% if error %}
         <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
@@ -25,7 +22,7 @@
                 <div class="mb-3">
                     <label for="password" class="form-label">Mot de passe</label>
                     <input type="password" class="form-control" id="password" name="_password">
-                    <a class="btn btn-link btn-sm" href="#">Mot de passe oublié?</a>
+                    <a class="btn btn-link btn-sm" href="{{path('app_forgot_password_request')}}">Mot de passe oublié?</a>
                 </div>
 
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">

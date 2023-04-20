@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mot de passe oublié{% endblock %}
+
+{% block body %}
+{% for flash_error in app.flashes('reset_password_error') %}
+    <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+{% endfor %}
+
+<main class="form-signin pt-5 mt-5">
+    <div class="card">
+            <div class="card-header d-flex justify-content-center">
+                <h1 class="h3 fw-normal">Mot de passe oublié</h1>
+            </div>
+            <div class="card-body">
+            {{ form_start(requestForm) }}
+                {{ form_row(requestForm.username) }}
+
+                <button type="submit" class="w-100 btn btn-primary">Demander à changer le mot de passe</button>
+            {{ form_end(requestForm) }}
+        </div>
+        <div class="card-footer">
+            <a class="btn btn-link btn-sm" href="{{path('app_login') }}">login</a>
+            <a class="btn btn-link btn-sm" href="{{path('index') }}">Accueil</a>
+        </div>
+    </div>
+</main>
+
+{% endblock %}
+
+
+{# ################################################################
+
+{% extends 'base.html.twig' %}
+{% for flash_error in app.flashes('reset_password_error') %}
+    <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+{% endfor %}
+<main class="form-signin pt-5 mt-5">
+    <div class="card">
+        <div class="card-header d-flex justify-content-center">
+            <h1 class="h3 fw-normal">Mot de passe oublié</h1>
+        </div>
+        <div class="card-body">
+            <form action="{{ path('app_forgotten_password') }}" method="post">
+                
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="_username">
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                   
+                    <button type="submit" class="w-100 btn btn-primary">Demander un changement de mot de passe</button> 
+            </form>
+        </div>
+        <div class="card-footer">
+            <a class="btn btn-link btn-sm" href="{{path('app_login') }}">login</a>
+            <a class="btn btn-link btn-sm" href="{{path('index') }}">Accueil</a>
+        </div>
+    </div>
+
+</main>
+{% endblock %}
+
+#}
