@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Trick{% endblock %}
+
+{% block body %}
+<div class="container mt-5 pt-5">
+    <div class="card">
+        <div class="card-img">
+            <div class="card-buttons me-3 mt-3">
+                <a class="btn btn-light me-1" href="{{ path('app_trick_index') }}"><i class="fa-solid fa-arrow-left"></i></a>
+                <a class="btn btn-danger text-light delete" data-href="{{ path('app_trick_delete', {slug: trick.slug}) }}"><i class="fa-regular fa-trash-can"></i></a>
+            </div>
+            <h1 class="card-title">Nouveau Trick</h1>
+            <img class="card-img-top" src="{{ asset('images/default.jpg') }}" alt="Card image cap">
+        </div>
+        <div class="card-body">
+            {{ include('trick/_form.html.twig') }}
+        </div>
+    </div>
+</div>
+{% endblock %}

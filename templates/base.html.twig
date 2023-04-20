@@ -11,9 +11,39 @@
 
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
+            <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
         {% endblock %}
     </head>
-    <body>
+    <body class=" bg-dark">
+        <!-- Header -->
+        <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{{ path('index') }}">Snow Tricks</a>
+                <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar">
+                    <ul class="navbar-nav ms-auto flex-nowrap">
+                        <li class="nav-item">
+                            <a href="{{ path('index') }}" class="nav-link m-2 menu-item nav-active">Accueil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ path('app_trick_index') }}" class="nav-link m-2 menu-item">Tricks</a>
+                        </li>
+                        <li class="nav-item">
+                            {% if is_granted('ROLE_USER') %}
+                                <a href="{{ path('app_logout')}}" class="nav-link m-2 menu-item">Déconnexion</a>
+                            {% else %}
+                                <a href="{{ path('app_login')}}" class="nav-link m-2 menu-item">Connexion</a>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
         {% block body %}{% endblock %}
+        <!-- footer -->
+        <div class="pt-5"></div>
+        <footer class="mt-5 fixed-bottom text-muted text-center text-small bg-light">
+            <p class="my-2">2023 - Ce projet a été élaborée par <a class="link-info" href="#">Erwan H.</a> Pour OpenClassrooms</p>
+        </footer>
     </body>
 </html>

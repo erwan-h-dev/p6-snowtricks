@@ -34,7 +34,7 @@ Encore
     .addEntry('form', './assets/form.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
-    .enableStimulusBridge('./assets/controllers.json')
+    // .enableStimulusBridge('./assets/controllers.json')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
@@ -66,12 +66,14 @@ Encore
     })
 
     // enables Sass/SCSS support
-    .enableSassLoader(function(options) {
-        
-        resolveUrlLoader: true
-    })
+    .enableSassLoader()
 
-    .enablePostCssLoader()
+    // uncomment if you're having problems with a jQuery plugin
+    .autoProvideVariables({
+        $: 'jquery',
+        jQuery: 'jquery',
+        'window.jQuery': 'jquery',
+    })
 ;
 
 module.exports = Encore.getWebpackConfig();

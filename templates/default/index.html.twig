@@ -4,64 +4,53 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container">
-		<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
-			<div class="container-fluid">
-				<a class="navbar-brand" href="#">Navbar</a>
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="collapse navbar-collapse" id="navbarSupportedContent">
-					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-						<li class="nav-item">
-							<a class="nav-link active" aria-current="page" href="#">Home</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#">Link</a>
-						</li>
-						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-								Dropdown
-							</a>
-							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-								<li>
-									<a class="dropdown-item" href="#">Action</a>
-								</li>
-								<li>
-									<a class="dropdown-item" href="#">Another action</a>
-								</li>
-								<li><hr class="dropdown-divider"></li>
-								<li>
-									<a class="dropdown-item" href="#">Something else here</a>
-								</li>
-							</ul>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-						</li>
-					</ul>
-					<form class="d-flex">
-						<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-						<button class="btn btn-outline-success" type="submit">Search</button>
-					</form>
+
+<div id="home">
+	<div class="landing-text">
+		<h1 class="h1 text-dark">SnowTricks</h1>
+		<h3 class="h3 text-dark">Explorez l'art et la philosophie du snowboard à travers notre sélection de figures sensationnelles sur notre site.</h3>
+		{# <div class=""> #}
+			<div class="show-down w-100 d-flex justify-content-end">
+				<a href="#content-page" class="btn me-3">
+					<i class="fas fa-2x fa-chevron-down text-dark"></i>
+				</a>
+			</div>
+		{# </div> #}
+	</div>
+</div>
+<div class="container mt-3 pt-5" id="content-page">
+
+	<h3 class="h3 text-dark">Listes des Tricks</h3>
+
+	<div class="row" id="tricks-list">
+
+		{% for trick in tricks %}
+			<div class="col-sm-12 col-md-4 col-lg-3 mb-3">
+				<div class="card">
+					<img class="card-img-top" src="{{ asset('images/default.jpg') }}" alt="Card image cap">
+					<div class="card-footer">
+						<a href="{{ path('app_trick_show', {slug: trick.slug})}}" class="btn stretched-link">
+						<h5 class="h5">{{ trick.title }}</h5>
+						</a>
+					</div>
 				</div>
 			</div>
-		</nav>
+		{% endfor %}
 
-		<footer class="my-5 pt-5 text-muted text-center text-small">
-			<p class="mb-1">© 2017–2020 Company Name</p>
-			<ul class="list-inline">
-				<li class="list-inline-item">
-					<a href="#">Privacy</a>
-				</li>
-				<li class="list-inline-item">
-					<a href="#">Terms</a>
-				</li>
-				<li class="list-inline-item">
-					<a href="#">Support</a>
-				</li>
-			</ul>
-		</footer>
 	</div>
+	
+	<div class="text-center">
+		{% if tricks|length >= 12 %}
+		    <button class="btn btn-light btn-block a" id="load-more">Load More</button>
+        {% endif %}
+	</div>
+</div>
+<div class="d-flex justify-content-end">
+	<a href="#content-page" class="btn me-3">
+		<i class="fas fa-2x fa-chevron-up text-light"></i>
+	</a>
+</div>
+
+{{ encore_entry_script_tags('index') }}
 
 {% endblock %}

@@ -1,0 +1,84 @@
+{{ form_start(form) }}
+    {# {{ form_widget(form) }} #}
+    <div class="row">
+        <div class="col-md-6">
+            {{ form_row(form.title) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.categorie) }}
+        </div>
+    </div>
+    <div class="col-md-12">
+        
+ 
+        {% set form_media %}
+            <div class="card item_link" data-index="__name__" id="{{ form.medias.vars.prototype.vars.id }}">
+                {# VIEW MEDIA #}
+                    {# vidéo #}
+                    <div class="ratio ratio-16x9 media-view video" style="display:none;">
+                        <iframe  src="" frameborder="0" allowfullscreen=""></iframe>
+                    </div>
+                    {# image #}
+                    <img src="{{ asset('images/default.jpg') }}" alt="" class="card-img-top image media-view">
+
+                    <div class="card-footer media-view text-end footer" style="display:none;">
+                        <a class="btn btn-warning text-light edit"><i class="fa-solid fa-pen"></i></a>
+                        <a class="btn btn-danger remove"><i class="fa-regular fa-trash-can"></i></a>
+                    </div>
+                {# END VIEW MEDIA #}
+                {# FORM EDIT MEDIA #}
+                    <div class="card-body media-form">
+                        {{ form_row(form.medias.vars.prototype.type) }}
+                        {{ form_row(form.medias.vars.prototype.image) }}
+                        {{ form_row(form.medias.vars.prototype.video) }}
+                    </div>
+                    <div class="card-footer media-form text-end">
+                        <a class="btn btn-success save"><i class="fa-regular fa-floppy-disk"></i></a>
+                    </div>
+                {# END FORM EDIT MEDIA #}
+            </div>
+        {% endset %}
+
+        <button type="button" class="btn btn-success mb-3 add_item_link" data-collection-holder-class="medias"><i class="fa-solid fa-plus"></i></button>
+        <div class="medias owl-carousel owl-theme mb-3" data-index="{{ form.medias|length > 0 ? form.medias|last.vars.name + 1 : 0 }}" data-prototype="{{ form_media|e('html_attr') }}">
+            {% for key, mediaFields in form.medias %}
+                <div class="card item_link" data-index="{{ key }}" id="trick_media_{{ key }}" data-type="{{ mediaFields.vars.value.type }}">
+                {# VIEW MEDIA #}
+                    {# vidéo #}
+                    <input type="hidden" class="media-path" value="{{ mediaFields.vars.value.path }}">
+                    <div class="ratio ratio-16x9 media-view video" {% if mediaFields.vars.value.type == 'image' %}style="display:none;"{% endif %}>
+                        <iframe  src="" frameborder="0" allowfullscreen=""></iframe>
+                    </div>
+
+                    {# image #}
+                    <img src="{{ asset(mediaFields.vars.value.path) }}" alt="" class="card-img-top image media-view" {% if mediaFields.vars.value.type == 'video' %}style="display:none;"{% endif %}>
+
+                    <div class="card-footer media-view text-end footer">
+                        <a class="btn btn-warning text-light edit"><i class="fa-solid fa-pen"></i></a>
+                        <a class="btn btn-danger remove"><i class="fa-regular fa-trash-can"></i></a>
+                    </div>
+                {# END VIEW MEDIA #}
+                
+                {# FORM EDIT MEDIA #}
+                    <div class="card-body media-form" style="display:none;">
+                        {{ form_row(mediaFields.type) }}
+                        {{ form_row(mediaFields.image) }}
+                        {{ form_row(mediaFields.video) }}
+                    </div>
+                    <div class="card-footer media-form text-end" style="display:none;">
+                        <a class="btn btn-success save"><i class="fa-regular fa-floppy-disk"></i></a>
+                    </div>
+                {# END FORM EDIT MEDIA #}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-md-12">
+        {{ form_row(form.content) }}
+    </div>
+    <div class="col-md-12 text-end">
+        <button class="btn btn-success"><i class="fa-regular fa-floppy-disk"></i></button>
+    </div>
+    {{ encore_entry_script_tags('form') }}
+
+{{ form_end(form) }}

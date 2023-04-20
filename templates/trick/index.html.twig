@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tricks{% endblock %}
+
+{% block body %}
+<div class="container mt-5 pt-5" id="content-page">
+
+	<div class="d-flex justify-content-between mb-3">
+		<h3 class="h1 text-light">Listes des Tricks</h3>
+		<div>	
+			<a href="{{ path('app_trick_new') }}" class="btn btn-success"><i class="fa-solid fa-plus me-2"></i>Créer un Trick</a>
+		</div>
+	</div>
+
+	<div class="row" id="tricks-list">
+		{% if tricks|length == 0 %}
+		<div class="w-100">
+			<p class="text-warning">Aucun Trick n'a été créer</p>
+		</div>
+		{% endif %}
+		{% for trick in tricks %}
+			<div class="col-sm-12 col-md-4 col-lg-3 mb-3">
+				<div class="card">
+					<img class="card-img-top" src="{{ asset('images/default.jpg') }}" alt="Card image cap">
+					
+					<div class="card-footer">
+						<a href="{{ path('app_trick_show', {slug: trick.slug})}}" class="btn stretched-link">
+						<h5 class="h5">{{ trick.title }}</h5>
+						</a>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+	
+	<div class="text-center">
+        {% if tricks|length >= 12 %}
+		    <button class="btn btn-light btn-block a" id="load-more">Load More</button>
+        {% endif %}
+	</div>
+</div>
+
+{{ encore_entry_script_tags('index') }}
+
+{% endblock %}

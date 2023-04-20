@@ -48,13 +48,15 @@ body{
 		}
 	}
 
-	.trick-card{
+
+	.card-img{
+		position: relative;
+
 		.card-buttons{
 			position: absolute;
 			top: 0;
 			right: 0;
 		}
-
 		.card-title{
 			position: absolute;
 			top: 50%;

@@ -9,13 +9,15 @@
 import './styles/app.scss';
 import 'select2/dist/css/select2.css';
 import '@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.css';
+import 'owl.carousel/dist/assets/owl.carousel.css';
 
 // start the Stimulus application
-import './bootstrap';
+// import './bootstrap';
 import $ from 'jquery';
 import 'select2';
 import Swal from 'sweetalert2';
-// import tinymce from 'tinymce';
+import tinymce from 'tinymce';
+import 'owl.carousel';
 
 $(function() {
 
@@ -49,8 +51,27 @@ $(function() {
                 }).then((result) => {
                     $(".delete-form").submit();
                 });
-                
             }
         })
     });
+
+    window.owl = $('.owl-carousel').owlCarousel({
+        loop: false,
+        margin:10,
+    });
+
+    // initialisation des vidéos au chargement de la page
+    $('.item_link').each(function () {
+        if ($(this).data('type') == 'video') {
+            var path = $(this).closest('.item_link').find('.media-path').val()
+            var youtubeUrl = youtube_parser(path);
+            $(this).closest('.item_link').find('.video iframe').attr('src', 'https://www.youtube.com/embed/' + youtubeUrl);
+        }
+    })
+
+    function youtube_parser(url) {
+        var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+        var match = url.match(regExp);
+        return (match && match[7].length == 11) ? match[7] : false;
+    }
 });

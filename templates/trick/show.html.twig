@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ trick.title }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5 pt-5">
+    <div class="card">
+        <div class="card-img">
+            <div class="card-buttons me-3 mt-3">
+                <a class="btn btn-light me-1" href="{{ path('app_trick_index') }}">
+                    <i class="fa-solid fa-arrow-left"></i></a>
+                <a class="btn btn-warning text-light me-1" href="{{ path('app_trick_edit', {slug: trick.slug}) }}"><i class="fa-solid fa-pen"></i></a>
+                <a class="btn btn-danger text-light delete" data-href="{{ path('app_trick_delete', {slug: trick.slug}) }}"><i class="fa-regular fa-trash-can"></i></a>
+                {{ include('trick/_delete_form.html.twig') }}
+            </div>
+            <h1 class="card-title">{{ trick.title }}</h1>
+            {% set defaultImage =  'images/default.jpg' %}
+            {% set break = false %}
+            {% for media in trick.medias %}
+                {% if media.type == 'image' and not break %}
+                    {% set defaultImage = 'images/uploads/' ~ media.path %}
+                    {% set break = true %}
+                {% endif %}
+            {% endfor %}
+            <img class="card-img-top" src="{{ asset(defaultImage) }}" alt="Card image cap">
+        </div>
+        <div class="card-body">
+                <div class="medias owl-carousel owl-theme mb-5">
+                    {% for media in trick.medias %}
+                    <div class="card item_link" data-index="{{ media.id }}" id="trick_media_{{ media.id }}" data-type="{{ media.type }}">
+                        {# vidéo #}
+                        <input type="hidden" class="media-path" value="{{ media.path }}">
+                        <div class="ratio ratio-16x9 media-view video" {% if media.type == 'image' %}style="display:none;"{% endif %}>
+                            <iframe src="" frameborder="0" allowfullscreen=""></iframe>
+                        </div>
+                        {# image #}
+                        <img src="{{ asset('images/uploads/' ~ media.path) }}" alt="" class="card-img-top image media-view" {% if media.type == 'video' %}style="display:none;" {% endif %}>
+                        {% if app.user %}
+                        <div class="card-footer media-view text-end footer">
+                            <a class="btn btn-warning text-light edit"><i class="fa-solid fa-pen"></i></a>
+                            <a class="btn btn-danger remove"><i class="fa-regular fa-trash-can"></i></a>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="row d-flex justify-content-center mb-5">
+                    <div class="col-md-8">
+                        <div class="w-100 mb-3">
+                            {{ trick.content|raw }}
+                        </div>
+                        <div class="w-100 mb-3 d-flex justify-content-around">
+                            <div><span class="badge bg-secondary">Catégorie : {{ trick.categorie }}</span></div>
+                            <div><span class="badge bg-secondary">Créer le : {{ trick.createdAt|date('d/m/Y') }}</span></div>
+                            <div><span class="badge bg-secondary">Modifier le : {{ trick.updatedAt|date('d/m/Y') }}</span></div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="h3">Commentaires</h3>
+                            </div>
+                            <div class="card-body">
+                                {% if app.user %}
+                                <div class="w-100 mb-3">
+                                    <h3 class="h3">Ecrire un commentaire</h3>
+                                    <div class="w-100 mb-3">
+                                        {# {{ form_start(form) }} #}
+                                        {# {{ form_widget(form) }} #}
+                                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                                        {# {{ form_end(form) }} #}
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="comments">
+                                    <div class="text-warning"><p>Aucun commentaire n'a été crée</p></div>
+                                    {# {% for comment in trick.comments %}
+                                    <div class="comment mb-3">
+                                        <div class="comment-header">
+                                            <div class="comment-author">
+                                                <span class="badge bg-secondary">{{ comment.author }}</span>
+                                            </div>
+                                            <div class="comment-date">
+                                                <span class="badge bg-secondary">{{ comment.createdAt|date('d/m/Y') }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="comment-content">
+                                            {{ comment.content|raw }}
+                                        </div>
+                                    </div>
+                                    {% endfor %} #}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
