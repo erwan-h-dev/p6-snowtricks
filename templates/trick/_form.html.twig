@@ -51,7 +51,7 @@
                     </div>
 
                     {# image #}
-                    <img src="{{ asset(mediaFields.vars.value.path) }}" alt="" class="card-img-top image media-view" {% if mediaFields.vars.value.type == 'video' %}style="display:none;"{% endif %}>
+                    <img src="{{ asset('images/uploads/' ~ mediaFields.vars.value.path) }}" alt="" class="card-img-top image media-view" {% if mediaFields.vars.value.type == 'video' %}style="display:none;"{% endif %}>
 
                     <div class="card-footer media-view text-end footer">
                         <a class="btn btn-warning text-light edit"><i class="fa-solid fa-pen"></i></a>

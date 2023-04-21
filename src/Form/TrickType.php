@@ -7,6 +7,7 @@ use App\Entity\Trick;
 use App\Form\MediaType;
 use App\Entity\Categorie;
 use Symfony\Component\Form\AbstractType;
+use Eckinox\TinymceBundle\Form\Type\TinymceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -28,10 +29,14 @@ class TrickType extends AbstractType
                     'class' => 'select2',
                 ]
             ])
-            ->add('content', TextareaType::class, [
+            ->add('content', TinymceType::class, [
                 'required' => false,
                 'attr' => [
                     'class' => 'tinymce',
+                    'height' => '600',
+                    'toolbar' => 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
+                    'menubar' => null,
+                    'add_form_submit_trigger' => true,
                 ],
             ])
             ->add('medias', CollectionType::class, [

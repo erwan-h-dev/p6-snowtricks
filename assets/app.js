@@ -16,16 +16,9 @@ import 'owl.carousel/dist/assets/owl.carousel.css';
 import $ from 'jquery';
 import 'select2';
 import Swal from 'sweetalert2';
-import tinymce from 'tinymce';
 import 'owl.carousel';
 
 $(function() {
-
-    tinymce.init({
-        selector: '#trick_content',
-        menubar: false,
-        add_form_submit_trigger : true
-    });
 
     $('.select2').select2({
         theme: 'bootstrap4'
