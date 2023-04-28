@@ -5,8 +5,12 @@ namespace App\Controller;
 use App\Entity\Media;
 use App\Entity\Trick;
 use App\Form\TrickType;
+use App\Entity\Commentaire;
+use App\Form\CommentaireType;
 use App\Service\FileUploader;
+use App\Repository\MediaRepository;
 use App\Repository\TrickRepository;
+use App\Repository\CommentaireRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,16 +21,23 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 #[Route('/trick')]
 class TrickController extends AbstractController
 {
+    // construct
+    public function __construct(
+        private TrickRepository $trickRepository,
+        private MediaRepository $mediaRepository,
+        private CommentaireRepository $commentaireRepository
+    ){ }
+
     #[Route('/liste', name: 'app_trick_index', methods: ['GET'])]
-    public function index(TrickRepository $trickRepository): Response
+    public function index(): Response
     {
         return $this->render('trick/index.html.twig', [
-            'tricks' => $trickRepository->findAll(),
+            'tricks' => $this->trickRepository->findAll(),
         ]);
     }
 
     #[Route('/new', name: 'app_trick_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, TrickRepository $trickRepository, FileUploader $fileUploader): Response
+    public function new(Request $request, FileUploader $fileUploader): Response
     {
         $trick = new Trick();
 
@@ -39,6 +50,8 @@ class TrickController extends AbstractController
             $trick->setCreatedAt(new \DateTime());
 
             $mediasForm = $form->get('medias');
+
+            $trick->setAuteur($this->getUser());
             
             foreach ($mediasForm as $mediaForm) {
 
@@ -59,7 +72,7 @@ class TrickController extends AbstractController
                 }
             }
 
-            $trickRepository->save($trick, true);
+            $this->trickRepository->save($trick, true);
 
             return $this->redirectToRoute('app_trick_show', ['slug' => $trick->getSlug()], Response::HTTP_SEE_OTHER);
         }
@@ -71,39 +84,43 @@ class TrickController extends AbstractController
     }
 
     #[Route('/edit/{slug}', name: 'app_trick_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Trick $trick, TrickRepository $trickRepository, FileUploader $fileUploader): Response
+    public function edit(Request $request, Trick $trick, FileUploader $fileUploader): Response
     {
+        $this->denyAccessUnlessGranted('edit', $trick);
+
         $form = $this->createForm(TrickType::class, $trick);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $trick->setCreatedAt(new \DateTime());
+
             $mediasForm = $form->get('medias');
-            
+
+            $trick->setAuteur($this->getUser());
+
             foreach ($mediasForm as $mediaForm) {
 
                 $media = $mediaForm->getData();
-
-                if($media->getType() == 'image') {
-                                        
+                if ($media->getType() == 'image') {
+                    
                     $file = $mediaForm->get('image')->getData();
-
-                    if($file instanceof UploadedFile){
-
+                    
+                    if ($file instanceof UploadedFile) {
                         $fileName = $fileUploader->upload($file);
-                        
-                        $media->getPath($fileName);
-
+                        $media->setPath("images/uploads/" . $fileName);
                     }
-                }else{
+                } else {
+                    
                     if($mediaForm->get('video')->getData() != null){
                         $media->setPath($mediaForm->get('video')->getData());
                     }
                 }
+                $this->mediaRepository->save($media, true);
             }
 
-            $trickRepository->save($trick, true);
+            $this->trickRepository->save($trick, true);
 
             return $this->redirectToRoute('app_trick_show', ['slug' => $trick->getSlug()], Response::HTTP_SEE_OTHER);
         }
@@ -114,23 +131,40 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}', name: 'app_trick_show', methods: ['GET'])]
-    public function show(Trick $trick): Response
+    #[Route('/{slug}', name: 'app_trick_show', methods: ['GET', 'POST'])]
+    public function show(Request $request, Trick $trick): Response
     {
-        $form = "";
+        $commentaire = new Commentaire();
+        
+        $form = $this->createForm(CommentaireType::class, $commentaire);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            $commentaire->setCreatedAt(new \DateTime())
+                ->setTrick($trick)
+                ->setAuteur($this->getUser())
+            ;
+
+            $this->commentaireRepository->save($commentaire, true);
+
+            return $this->redirectToRoute('app_trick_show', ['slug' => $trick->getSlug()], Response::HTTP_SEE_OTHER);
+        }
 
         return $this->render('trick/show.html.twig', [
             'trick' => $trick,
             'form' => $form,
         ]);
     }
-
     
-    #[Route('/{slug}', name: 'app_trick_delete', methods: ['POST'])]
-    public function delete(Request $request, Trick $trick, TrickRepository $trickRepository): Response
+    #[Route('delete/{slug}', name: 'app_trick_delete', methods: ['POST'])]
+    public function delete(Request $request, Trick $trick): Response
     {
+        $this->denyAccessUnlessGranted('edit', $trick);
+
         if ($this->isCsrfTokenValid('delete'.$trick->getId(), $request->request->get('_token'))) {
-            $trickRepository->remove($trick, true);
+            $this->trickRepository->remove($trick, true);
         }
 
         return $this->redirectToRoute('app_trick_index', [], Response::HTTP_SEE_OTHER);

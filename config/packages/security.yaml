@@ -33,5 +33,6 @@ security:
             # switch_user: true
 
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: /trick/new, roles: ROLE_USER }
+        - { path: /commentaire/new, roles: ROLE_USER }
         # - { path: ^/profile, roles: ROLE_USER }

@@ -22,10 +22,10 @@ class Trick
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
-    #[ORM\Column(length: 2048, nullable: true)]
+    #[ORM\Column(length: 4096, nullable: true)]
     private $content = null;
 
-    #[ORM\ManyToOne(inversedBy: 'categorie')]
+    #[ORM\ManyToOne(inversedBy: 'tricks')]
     private Categorie $categorie;
 
     #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'trick', cascade: ['persist', 'remove'])]
@@ -37,10 +37,18 @@ class Trick
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'tricks')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Utilisateur $auteur = null;
+
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Commentaire::class, orphanRemoval: true)]
+    private Collection $commentaires;
+
     public function __construct()
     {
         $this->medias = new ArrayCollection();
         $this->updatedAt = new \DateTime();
+        $this->commentaires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -148,6 +156,48 @@ class Trick
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getAuteur(): ?Utilisateur
+    {
+        return $this->auteur;
+    }
+
+    public function setAuteur(?Utilisateur $auteur): self
+    {
+        $this->auteur = $auteur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commentaire>
+     */
+    public function getCommentaires(): Collection
+    {
+        return $this->commentaires;
+    }
+
+    public function addCommentaire(Commentaire $commentaire): self
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires->add($commentaire);
+            $commentaire->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): self
+    {
+        if ($this->commentaires->removeElement($commentaire)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getTrick() === $this) {
+                $commentaire->setTrick(null);
+            }
+        }
 
         return $this;
     }

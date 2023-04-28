@@ -8,17 +8,20 @@
         <div class="card-img">
             <div class="card-buttons me-3 mt-3">
                 <a class="btn btn-light me-1" href="{{ path('app_trick_index') }}">
-                    <i class="fa-solid fa-arrow-left"></i></a>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                {% if is_granted("edit", trick) %}
                 <a class="btn btn-warning text-light me-1" href="{{ path('app_trick_edit', {slug: trick.slug}) }}"><i class="fa-solid fa-pen"></i></a>
                 <a class="btn btn-danger text-light delete" data-href="{{ path('app_trick_delete', {slug: trick.slug}) }}"><i class="fa-regular fa-trash-can"></i></a>
                 {{ include('trick/_delete_form.html.twig') }}
+                {% endif %}
             </div>
             <h1 class="card-title">{{ trick.title }}</h1>
             {% set defaultImage =  'images/default.jpg' %}
             {% set break = false %}
             {% for media in trick.medias %}
                 {% if media.type == 'image' and not break %}
-                    {% set defaultImage = 'images/uploads/' ~ media.path %}
+                    {% set defaultImage = media.path %}
                     {% set break = true %}
                 {% endif %}
             {% endfor %}
@@ -34,13 +37,7 @@
                             <iframe src="" frameborder="0" allowfullscreen=""></iframe>
                         </div>
                         {# image #}
-                        <img src="{{ asset('images/uploads/' ~ media.path) }}" alt="" class="card-img-top image media-view" {% if media.type == 'video' %}style="display:none;" {% endif %}>
-                        {% if app.user %}
-                        <div class="card-footer media-view text-end footer">
-                            <a class="btn btn-warning text-light edit"><i class="fa-solid fa-pen"></i></a>
-                            <a class="btn btn-danger remove"><i class="fa-regular fa-trash-can"></i></a>
-                        </div>
-                        {% endif %}
+                        <img src="{{ asset(media.path) }}" alt="" class="card-img-top image media-view" {% if media.type == 'video' %}style="display:none;" {% endif %}>
                     </div>
                     {% endfor %}
                 </div>
@@ -54,6 +51,7 @@
                             <div><span class="badge bg-secondary">Catégorie : {{ trick.categorie }}</span></div>
                             <div><span class="badge bg-secondary">Créer le : {{ trick.createdAt|date('d/m/Y') }}</span></div>
                             <div><span class="badge bg-secondary">Modifier le : {{ trick.updatedAt|date('d/m/Y') }}</span></div>
+                            <div><span class="badge bg-secondary">Auteur : {{ trick.auteur.username }}</span></div>
                         </div>
                     </div>
                     <div class="col-md-8">
@@ -66,30 +64,38 @@
                                 <div class="w-100 mb-3">
                                     <h3 class="h3">Ecrire un commentaire</h3>
                                     <div class="w-100 mb-3">
-                                        {# {{ form_start(form) }} #}
-                                        {# {{ form_widget(form) }} #}
-                                        <button type="submit" class="btn btn-primary">Envoyer</button>
-                                        {# {{ form_end(form) }} #}
+                                        {% if is_granted("ROLE_USER") %}
+                                            {{ form_start(form) }}
+                                                {{ form_row(form.content) }}
+                                                <div class="w-100 text-end">
+                                                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                                                </div>
+                                            {{ form_end(form) }}
+                                        {% endif %}
                                     </div>
                                 </div>
                                 {% endif %}
-                                <div class="comments">
-                                    <div class="text-warning"><p>Aucun commentaire n'a été crée</p></div>
-                                    {# {% for comment in trick.comments %}
-                                    <div class="comment mb-3">
-                                        <div class="comment-header">
-                                            <div class="comment-author">
-                                                <span class="badge bg-secondary">{{ comment.author }}</span>
+                                <div class="list-group">
+                                    {% if trick.commentaires is empty %}
+                                        <div class="list-group-item text-warning">
+                                            <p>Aucun commentaire n'a été crée</p>
+                                        </div>
+                                    {% endif %}
+                                    {% for commentaire in trick.commentaires %}
+                                        <div class="list-group-item commenaire mb-3">
+                                            <div class="commenaire-header d-flex">
+                                                <div class="commenaire-author">
+                                                    <span class="badge bg-secondary me-2">{{ commentaire.auteur.username }}</span>
+                                                </div>
+                                                <div class="commenaire-date">
+                                                    <span class="badge bg-secondary">{{ commentaire.createdAt|date('d/m/Y H:i:s') }}</span>
+                                                </div>
                                             </div>
-                                            <div class="comment-date">
-                                                <span class="badge bg-secondary">{{ comment.createdAt|date('d/m/Y') }}</span>
+                                            <div class="commenaire-content">
+                                                {{ commentaire.content|raw }}
                                             </div>
                                         </div>
-                                        <div class="comment-content">
-                                            {{ comment.content|raw }}
-                                        </div>
-                                    </div>
-                                    {% endfor %} #}
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>

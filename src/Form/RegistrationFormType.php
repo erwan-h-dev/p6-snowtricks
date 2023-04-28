@@ -52,7 +52,7 @@ class RegistrationFormType extends AbstractType
                             'max' => 4096,
                         ]),
                     ],
-                    'label' => 'Nouveau mot de passe',
+                    'label' => 'mot de passe',
                 ],
                 'second_options' => [
                     'label' => 'Confirmer le nouveau mot de passe',

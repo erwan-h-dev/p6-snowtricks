@@ -18,7 +18,7 @@ class Categorie
     #[ORM\Column(length: 255)]
     private ?string $libelle = null;
 
-    #[ORM\OneToMany(targetEntity: Trick::class, mappedBy: 'categorie', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Trick::class)]
     private Collection $tricks;
 
     public function __construct()

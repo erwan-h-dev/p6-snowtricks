@@ -19,7 +19,7 @@ class Media
     #[ORM\Column(length: 255)]
     private ?string $path = "images/default.jpg";
 
-    #[ORM\ManyToOne(inversedBy: 'media')]
+    #[ORM\ManyToOne(inversedBy: 'medias')]
     private ?Trick $trick = null;
 
     public function getId(): ?int

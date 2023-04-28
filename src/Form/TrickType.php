@@ -34,8 +34,8 @@ class TrickType extends AbstractType
                 'attr' => [
                     'class' => 'tinymce',
                     'height' => '600',
-                    'toolbar' => 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
                     'menubar' => null,
+                    'toolbar' => 'undo redo | forecolor backcolor | blocks | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
                     'add_form_submit_trigger' => true,
                 ],
             ])
