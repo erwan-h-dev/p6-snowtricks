@@ -11,9 +11,11 @@ use App\Service\FileUploader;
 use App\Repository\MediaRepository;
 use App\Repository\TrickRepository;
 use App\Repository\CommentaireRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -33,6 +35,46 @@ class TrickController extends AbstractController
     {
         return $this->render('trick/index.html.twig', [
             'tricks' => $this->trickRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/paginate', name: 'app_trick_paginate', methods: ['GET'])]
+    public function paginate(Request $request, PaginatorInterface $paginator): Response
+    {
+
+        $tricksQuery = $this->trickRepository->findAllQuery();
+
+        $pagination = $paginator->paginate(
+            $tricksQuery,
+            $request->query->get('page'),
+            12
+        );
+
+        // return new JsonResponse([
+        //     'totalTricks' => count($this->trickRepository->findAll()),
+        //     'tricks' => $pagination,
+        // ], 200, [], false);
+
+        return $this->render('trick/_tricks.html.twig', [
+            'totalTricks' => $this->trickRepository->findAll(),
+            'tricks' => $pagination,
+        ]);
+    }
+
+    #[Route('/comment/paginate', name: 'app_commentaire_paginate', methods: ['GET'])]
+    public function commentairePaginate(Request $request, PaginatorInterface $paginator): Response
+    {
+
+        $tricksQuery = $this->commentaireRepository->findAllQuery();
+
+        $pagination = $paginator->paginate(
+            $tricksQuery,
+            $request->query->get('page'),
+            10
+        );
+
+        return $this->render('trick/_tricks.html.twig', [
+            'commentaire' => $pagination,
         ]);
     }
 
