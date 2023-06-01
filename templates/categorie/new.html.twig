@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Categorie{% endblock %}
+
+{% block body %}
+<div class="container mt-5 pt-5">
+    <div class="card bg-secondary">
+        <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title text-white">Nouvelle Categorie</h3>
+            <a class="btn btn-outline-light me-1" href="{{ path('app_categorie_index') }}"><i class="fa-solid fa-arrow-left"></i></a>
+        </div>
+        <div class="card-body">
+            {{ include('categorie/_form.html.twig') }}
+        </div>
+    </div>
+</div>
+{% endblock %}
