@@ -1,22 +1,11 @@
-{% set json %}
-{
-    total: {{ totalTricks|length }},
-    results: [{% for trick in tricks %}
-        {
-            slug: "{{ trick.slug }}",
-            title: "{{ trick.title }}"
-        }{% if not loop.last %},{% endif %}
-    {% endfor %}]
-}
-{% endset %}
-{{ json|json_encode|raw }}
-
-
-
-{# <div class="col-sm-12 col-md-4 col-lg-3 mb-3">
-    <div class="card"><img class="card-img-top" src="{{ asset('images/default.jpg') }}" alt="Card image cap">
+{% for trick in tricks %}
+<div class="col-sm-12 col-md-4 col-lg-3 mb-3 trick">
+    <div class="card">
+        <a href="{{ path('app_trick_show', {slug: trick.slug})}}" class="">
+            <img class="card-img-top" src="{{ asset('images/default.jpg') }}" alt="Card image cap">
+        </a>
         <div class="card-footer d-flex justify-content-between">
-            <a href="{{ path('app_trick_show', {slug: trick.slug})}}" class="btn stretched-link"><h5 class="h5">{{ trick.title }}</h5></a>
+            <a href="{{ path('app_trick_show', {slug: trick.slug})}}" class="btn"><h5 class="h5">{{ trick.title }}</h5></a>
             <div>
                 {% if is_granted("edit", trick) %}
                 <a class="btn btn-warning text-light me-1" href="{{ path('app_trick_edit', {slug: trick.slug}) }}"><i class="fa-solid fa-pen"></i></a>
@@ -25,4 +14,5 @@
             </div>
         </div>
     </div>
-</div> #}
+</div>
+{% endfor %}

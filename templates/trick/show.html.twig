@@ -28,6 +28,8 @@
             <img class="card-img-top" src="{{ asset(defaultImage) }}" alt="Card image cap">
         </div>
         <div class="card-body">
+
+
                 <div class="medias owl-carousel owl-theme mb-5">
                     {% for media in trick.medias %}
                     <div class="card item_link" data-index="{{ media.id }}" id="trick_media_{{ media.id }}" data-type="{{ media.type }}">
@@ -41,6 +43,8 @@
                     </div>
                     {% endfor %}
                 </div>
+
+
 
                 <div class="row d-flex justify-content-center mb-5">
                     <div class="col-md-8">
@@ -75,27 +79,10 @@
                                     </div>
                                 </div>
                                 {% endif %}
-                                <div class="list-group">
-                                    {% if trick.commentaires is empty %}
-                                        <div class="list-group-item text-warning">
-                                            <p>Aucun commentaire n'a été crée</p>
-                                        </div>
-                                    {% endif %}
-                                    {% for commentaire in trick.commentaires %}
-                                        <div class="list-group-item commenaire mb-3">
-                                            <div class="commenaire-header d-flex">
-                                                <div class="commenaire-author">
-                                                    <span class="badge bg-secondary me-2">{{ commentaire.auteur.username }}</span>
-                                                </div>
-                                                <div class="commenaire-date">
-                                                    <span class="badge bg-secondary">{{ commentaire.createdAt|date('d/m/Y H:i:s') }}</span>
-                                                </div>
-                                            </div>
-                                            <div class="commenaire-content">
-                                                {{ commentaire.content|raw }}
-                                            </div>
-                                        </div>
-                                    {% endfor %}
+                                <div class="list-group" id="commentaires-list" data-commentaires="{{ trick.commentaires|length }}">
+                                    <div class="list-group-item text-warning">
+                                        <p>Aucun commentaire n'a été crée</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -105,4 +92,11 @@
         </div>
     </div>
 </div>
+
+<script>
+	var paginate_commentaires_url = "{{ path('app_commentaire_paginate', {id : trick.id}) }}"
+	var page = 1
+</script>
+
+{{ encore_entry_script_tags('trick') }}
 {% endblock %}

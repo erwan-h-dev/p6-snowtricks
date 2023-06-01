@@ -14,40 +14,21 @@
 		</div>
 	</div>
 
-	<div class="row" id="tricks-list">
-		{% if tricks is empty %}
-			<div class="w-100">
-				<p class="text-warning">Aucun Trick n'a été créer</p>
-			</div>
-		{% endif %}
-		{% for trick in tricks %}
-			<div class="col-sm-12 col-md-4 col-lg-3 mb-3">
-				<div class="card">
-					<img class="card-img-top" src="{{ asset('images/default.jpg') }}" alt="Card image cap">
-					
-					<div class="card-footer d-flex justify-content-between">
-						<a href="{{ path('app_trick_show', {slug: trick.slug})}}" class="btn stretched-link">
-							<h5 class="h5">{{ trick.title }}</h5>
-						</a>
-						<div>
-							{% if is_granted("edit", trick) %}
-							<a class="btn btn-warning text-light me-1" href="{{ path('app_trick_edit', {slug: trick.slug}) }}"><i class="fa-solid fa-pen"></i></a>
-							<a class="btn btn-danger text-light delete" data-href="{{ path('app_trick_delete', {slug: trick.slug}) }}"><i class="fa-regular fa-trash-can"></i></a>
-							{% endif %}
-						</div>
-					</div>
-				</div>
-			</div>
-		{% endfor %}
+	<h3 class="h3 text-dark">Listes des Tricks</h3>
+
+	<div class="row mb-5" id="tricks-list" data-tricks="{{ tricks|length }}">
+		<div class="col-12 text-center text-warning">Aucun trick à afficher</div>
 	</div>
 	
-	<div class="text-center">
-        {% if tricks|length >= 12 %}
-		    <button class="btn btn-light btn-block a" id="load-more">Load More</button>
+	<div class="text-center mb-5">
+		{% if tricks|length >= 12 %}
+		    <button class="btn btn-light btn-block a" id="load-more" style="display: none;">Load More</button>
         {% endif %}
 	</div>
 </div>
-
+<script>
+	var paginate_tricks_url = "{{ path('app_trick_paginate') }}"
+	var page = 1
+</script>
 {{ encore_entry_script_tags('index') }}
-
 {% endblock %}

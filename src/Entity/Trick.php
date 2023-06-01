@@ -2,13 +2,19 @@
 
 namespace App\Entity;
 
-use App\Repository\TrickRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TrickRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
+#[UniqueEntity(
+    fields: ['slug'],
+    errorPath: 'title',
+    message: 'La valeur du titre est déjà utilisé.'
+)]
 class Trick
 {
     #[ORM\Id]
@@ -19,7 +25,7 @@ class Trick
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $slug = null;
 
     #[ORM\Column(length: 4096, nullable: true)]
@@ -41,7 +47,7 @@ class Trick
     #[ORM\JoinColumn(nullable: false)]
     private ?Utilisateur $auteur = null;
 
-    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Commentaire::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Commentaire::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $commentaires;
 
     public function __construct()
@@ -49,6 +55,9 @@ class Trick
         $this->medias = new ArrayCollection();
         $this->updatedAt = new \DateTime();
         $this->commentaires = new ArrayCollection();
+
+        
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -77,7 +86,7 @@ class Trick
 
     public function setSlug(string $slug): self
     {
-        $this->slug = preg_replace("/[^a-z0-9\-]/", "", $slug);
+        $this->slug = preg_replace("/[^a-z0-9\-]/", "", preg_replace("/[\s_]/", "-", mb_strtolower($slug)));
 
         return $this;
     }

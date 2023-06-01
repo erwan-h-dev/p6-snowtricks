@@ -22,13 +22,13 @@
 
 	<h3 class="h3 text-dark">Listes des Tricks</h3>
 
-	<div class="row" id="tricks-list">
-
+	<div class="row" id="tricks-list" data-tricks="{{ tricks|length }}">
+		<div class="col-12 text-center text-warning mb-5">Aucun trick à afficher</div>
 	</div>
 	
 	<div class="text-center">
 		{% if tricks|length >= 12 %}
-		    <button class="btn btn-light btn-block a" id="load-more">Load More</button>
+		    <button class="btn btn-light btn-block a" id="load-more" style="display: none;">Load More</button>
         {% endif %}
 	</div>
 </div>

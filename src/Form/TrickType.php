@@ -24,7 +24,7 @@ class TrickType extends AbstractType
             ->add('categorie', EntityType::class, [
                 'class' => Categorie::class,
                 'choice_label' => 'libelle',
-                'required' => false,
+                'required' => true,
                 'attr' => [
                     'class' => 'select2',
                 ]

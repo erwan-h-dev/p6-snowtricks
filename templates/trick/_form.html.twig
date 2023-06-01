@@ -10,6 +10,8 @@
     </div>
     <div class="col-md-12">
         
+        {# appeller manuellement  #}
+        {{ form_row(form._token) }} 
  
         {% set form_media %}
             <div class="card item_link" data-index="__name__" id="{{ form.medias.vars.prototype.vars.id }}">
@@ -40,6 +42,7 @@
         {% endset %}
 
         <button type="button" class="btn btn-success mb-3 add_item_link" data-collection-holder-class="medias"><i class="fa-solid fa-plus"></i></button>
+
         <div class="medias owl-carousel owl-theme mb-3" data-index="{{ form.medias|length > 0 ? form.medias|last.vars.name + 1 : 0 }}" data-prototype="{{ form_media|e('html_attr') }}">
             {% for key, mediaFields in form.medias %}
                 <div class="card item_link" data-index="{{ key }}" id="trick_media_{{ key }}" data-type="{{ mediaFields.vars.value.type }}">
@@ -81,4 +84,4 @@
     </div>
     {{ encore_entry_script_tags('form') }}
 
-{{ form_end(form) }}
+{{ form_end(form, {render_rest: false}) }}

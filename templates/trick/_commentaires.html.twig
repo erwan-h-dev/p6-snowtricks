@@ -1,0 +1,12 @@
+{% for commentaire in commentaires %}
+<div class="d-flex flex-start mb-4">
+    <img class="rounded-circle shadow-1-strong me-3" src="{{ asset('images/avatar.png') }}" alt="avatar" width="65" height="65">
+    <div>
+        <p class="small"><span class="h5">{{ commentaire.auteur.username }}</span> {{ commentaire.createdAt|date('d/m/Y H:i:s') }}</p>
+        <p>{{ commentaire.content|raw }}</p>
+    </div>
+</div>
+{% endfor %}
+<div class="navigation">
+    {{ knp_pagination_render(commentaires) }}
+</div>
