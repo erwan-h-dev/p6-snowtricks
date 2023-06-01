@@ -11,6 +11,8 @@ use App\Service\FileUploader;
 use App\Repository\MediaRepository;
 use App\Repository\TrickRepository;
 use App\Repository\CommentaireRepository;
+use App\Service\TrickManager;
+use Exception;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,6 +27,7 @@ class TrickController extends AbstractController
 {
     // construct
     public function __construct(
+        private TrickManager $trickManager,
         private TrickRepository $trickRepository,
         private MediaRepository $mediaRepository,
         private CommentaireRepository $commentaireRepository
@@ -41,7 +44,6 @@ class TrickController extends AbstractController
     #[Route('/paginate', name: 'app_trick_paginate', methods: ['GET'])]
     public function paginate(Request $request, PaginatorInterface $paginator): Response
     {
-
         $tricksQuery = $this->trickRepository->findAllQuery();
 
         $pagination = $paginator->paginate(
@@ -50,36 +52,30 @@ class TrickController extends AbstractController
             12
         );
 
-        // return new JsonResponse([
-        //     'totalTricks' => count($this->trickRepository->findAll()),
-        //     'tricks' => $pagination,
-        // ], 200, [], false);
-
         return $this->render('trick/_tricks.html.twig', [
             'totalTricks' => $this->trickRepository->findAll(),
             'tricks' => $pagination,
         ]);
     }
 
-    #[Route('/comment/paginate', name: 'app_commentaire_paginate', methods: ['GET'])]
-    public function commentairePaginate(Request $request, PaginatorInterface $paginator): Response
+    #[Route('/commentaire/paginate/{id}', name: 'app_commentaire_paginate', methods: ['GET'])]
+    public function commentairePaginate(Request $request, Trick $trick, PaginatorInterface $paginator): Response
     {
-
-        $tricksQuery = $this->commentaireRepository->findAllQuery();
+        $commentairesQuery = $this->commentaireRepository->findTrickCommentairesQuery($trick);
 
         $pagination = $paginator->paginate(
-            $tricksQuery,
+            $commentairesQuery,
             $request->query->get('page'),
             10
         );
 
-        return $this->render('trick/_tricks.html.twig', [
-            'commentaire' => $pagination,
+        return $this->render('trick/_commentaires.html.twig', [
+            'commentaires' => $pagination,
         ]);
     }
 
     #[Route('/new', name: 'app_trick_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, FileUploader $fileUploader): Response
+    public function new(Request $request): Response
     {
         $trick = new Trick();
 
@@ -89,33 +85,7 @@ class TrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $trick->setCreatedAt(new \DateTime());
-
-            $mediasForm = $form->get('medias');
-
-            $trick->setAuteur($this->getUser());
-            
-            foreach ($mediasForm as $mediaForm) {
-
-                $media = $mediaForm->getData();
-
-                if($media->getType() == 'image') {
-                                        
-                    $file = $mediaForm->get('image')->getData();
-
-                    if($file instanceof UploadedFile){
-
-                        $fileName = $fileUploader->upload($file);
-                        $media->setPath($fileName);
-                    }
-                }else{
-
-                    $media->setPath($mediaForm->get('video')->getData());
-                }
-            }
-
-            $this->trickRepository->save($trick, true);
-
+            $this->trickManager->createTrick($trick, $form);
             return $this->redirectToRoute('app_trick_show', ['slug' => $trick->getSlug()], Response::HTTP_SEE_OTHER);
         }
 
@@ -136,38 +106,12 @@ class TrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $trick->setCreatedAt(new \DateTime());
-
-            $mediasForm = $form->get('medias');
-
-            $trick->setAuteur($this->getUser());
-
-            foreach ($mediasForm as $mediaForm) {
-
-                $media = $mediaForm->getData();
-                if ($media->getType() == 'image') {
-                    
-                    $file = $mediaForm->get('image')->getData();
-                    
-                    if ($file instanceof UploadedFile) {
-                        $fileName = $fileUploader->upload($file);
-                        $media->setPath("images/uploads/" . $fileName);
-                    }
-                } else {
-                    
-                    if($mediaForm->get('video')->getData() != null){
-                        $media->setPath($mediaForm->get('video')->getData());
-                    }
-                }
-                $this->mediaRepository->save($media, true);
-            }
-
-            $this->trickRepository->save($trick, true);
+            $this->trickManager->createTrick($trick, $form);
 
             return $this->redirectToRoute('app_trick_show', ['slug' => $trick->getSlug()], Response::HTTP_SEE_OTHER);
         }
 
-         return $this->render('trick/new.html.twig', [
+        return $this->render('trick/new.html.twig', [
             'trick' => $trick,
             'form' => $form->createView(),
         ]);
@@ -200,15 +144,13 @@ class TrickController extends AbstractController
         ]);
     }
     
-    #[Route('delete/{slug}', name: 'app_trick_delete', methods: ['POST'])]
+    #[Route('/delete/{slug}', name: 'app_trick_delete', methods: ['POST'])]
     public function delete(Request $request, Trick $trick): Response
     {
         $this->denyAccessUnlessGranted('edit', $trick);
 
-        if ($this->isCsrfTokenValid('delete'.$trick->getId(), $request->request->get('_token'))) {
-            $this->trickRepository->remove($trick, true);
-        }
+        $this->trickRepository->remove($trick, true);
 
         return $this->redirectToRoute('app_trick_index', [], Response::HTTP_SEE_OTHER);
-    }	
+    }
 }

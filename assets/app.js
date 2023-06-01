@@ -24,7 +24,8 @@ $(function() {
         theme: 'bootstrap4'
     });
 
-    $('.delete').on('click', function(e) {
+    $(document).on('click', '.delete', function(e) {
+        console.log('test');
         Swal.fire({
             title: 'Etes-vous sûr ?',
             text: "Vous ne pourrez pas revenir en arrière !",
@@ -34,7 +35,7 @@ $(function() {
             cancelButtonColor: '#d33',
             cancelButtonText: 'Annuler',
             confirmButtonText: 'Oui, Supprimez-le!'
-            }).then((result) => {
+        }).then((result) => {
             if (result.isConfirmed) {
                 Swal.fire({
                     title: 'Supprimé !',
@@ -42,7 +43,8 @@ $(function() {
                     icon: 'success',
                     confirmButtonText: 'Confirmer'
                 }).then((result) => {
-                    $(".delete-form").submit();
+                   $.post($(this).attr('data-href'))
+                   $(this).closest('.trick').remove();
                 });
             }
         })
@@ -51,6 +53,24 @@ $(function() {
     window.owl = $('.owl-carousel').owlCarousel({
         loop: false,
         margin:10,
+        responsive: {
+            0: {
+                items: 1,
+                nav: false
+            },
+            800: {
+                items: 2,
+                nav: false
+            },
+            1000: {
+                items: 3,
+                nav: false
+            },
+            1400: {
+                items: 5,
+                nav: true
+            }
+        }
     });
 
     // initialisation des vidéos au chargement de la page

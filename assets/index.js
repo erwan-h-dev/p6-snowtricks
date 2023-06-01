@@ -1,21 +1,26 @@
-import $ from 'jquery';
-
 $(function() {
 
-    $.get(paginate_tricks_url, {page: page}, function(json) {
-        console.log(json)
-        var data = JSON.parse(json)
-        console.log(data.total)
-        // $('#tricks-list').append(data)
+    if ($('#tricks-list').data('tricks') > 0) {
 
-    });
+        $('#tricks-list').empty()
+        $('#load-more').show()
+
+        $.get(paginate_tricks_url, { page: page }, (data) => loadTricks(data));
+    }
 
     $("#load-more").on('click', function() {
         page++;
-        $.get(paginate_tricks_url, { page: page }, function (data) {
-            $('#tricks-list').append(data)
-            console.log(data.total)
 
-        });
+        $.get(paginate_tricks_url, { page: page }, (data) => loadTricks(data));
     });
 });
+
+function loadTricks(tricks){
+    $('#tricks-list').append(tricks)
+
+    var totalTricks = $('#tricks-list').data('tricks')
+
+    if (totalTricks <= $('.trick').length) {
+        $('#load-more').hide()
+    }
+}
