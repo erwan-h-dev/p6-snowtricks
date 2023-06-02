@@ -8,9 +8,14 @@ ainsi que de créer, modifier et de les supprimer des figures.
 
 Le projet a été développer dans un contexte pédagogique pour OpenClassrooms.
  [DEMO](http://p6-snowtrick.erwan-h.fr:48200/)
-## INSTALLATION
 
-0. use php 8.* and mysql 8.*
+## REQUIREMENTS
+* PHP 8.*
+* MySQL 8.*
+* Node 18.14.*
+* Composer 2.5.*
+
+## INSTALLATION
 
 1. Clone the repository
 ```bash
