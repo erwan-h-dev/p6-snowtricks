@@ -1,5 +1,7 @@
 # p6-snowtricks
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/978b0925ef414314812950e1e2a3cc6c)](https://app.codacy.com/gh/erwan-h-dev/p6-snowtricks/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
 ## DESCRIPTION
 
 Snowtricks est un annuaire communautaire de partage de figures de snowboard.

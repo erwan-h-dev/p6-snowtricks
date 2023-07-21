@@ -8,9 +8,15 @@ use App\Entity\Utilisateur;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class TrickFixtures extends Fixture implements DependentFixtureInterface
 {
+
+    public function __construct(
+        private HttpClientInterface $client
+    ) { }
+
     public function load(ObjectManager $manager): void
     {
         $categorieRepository = $manager->getRepository(Categorie::class);
@@ -111,12 +117,16 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
         for($i = 1; $i <= 30; $i++) {
             $trick = new Trick();
 
+            $response = $this->client->request(
+                'GET',
+                'https://loripsum.net/api/4/medium/headers/ul/decorate'
+            );
 
             $trick->setTitle('Trick ' . $i)
                 ->setCategorie($categories[rand(0, count($categories) - 1)])
                 ->setCreatedAt(new \DateTime())
                 ->setUpdatedAt(new \DateTime())
-                ->setContent(file_get_contents('https://loripsum.net/api/4/medium/headers/ul/decorate'))
+                ->setContent($response->getContent())
                 ->setAuteur($utilisateur)
             ;
 

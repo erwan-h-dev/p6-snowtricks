@@ -15,7 +15,7 @@ class FileUploader
     public function upload(UploadedFile $file)
     {
        
-        $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $originalFilename = $file->getClientOriginalName();
 
         $safeFilename = $this->slugger->slug($originalFilename);
 
