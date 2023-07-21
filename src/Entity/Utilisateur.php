@@ -75,14 +75,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-     /**
-     * @see UserInterface
-     */
+    /**
+    * @see UserInterface
+    */
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }
-    
+
     /**
      * @see UserInterface
      */

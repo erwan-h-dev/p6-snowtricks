@@ -17,7 +17,7 @@ class DefaultController extends AbstractController
         ]);
     }
 
-    static function typeMedia(): array
+    public static function typeMedia(): array
     {
         return [
             'image' => 'image',

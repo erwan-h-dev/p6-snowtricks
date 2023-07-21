@@ -37,7 +37,7 @@ class TrickVoter extends Voter
 
     private function canEdit(Trick $subject, Utilisateur $currentUser): bool
     {
-        
+
         if ($subject->getAuteur() == $currentUser) {
             return true;
         }

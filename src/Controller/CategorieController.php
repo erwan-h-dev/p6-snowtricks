@@ -25,7 +25,7 @@ class CategorieController extends AbstractController
     public function new(Request $request, CategorieRepository $categorieRepository): Response
     {
         $categorie = new Categorie();
-        
+
         $form = $this->createForm(CategorieType::class, $categorie);
 
         $form->handleRequest($request);

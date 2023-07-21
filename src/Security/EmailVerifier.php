@@ -20,7 +20,7 @@ class EmailVerifier
         VerifyEmailHelperInterface $verifyEmailHelper,
         MailerInterface $mailer,
         EntityManagerInterface $entityManager
-    ) { 
+    ) {
         $this->verifyEmailHelper = $verifyEmailHelper;
         $this->mailer = $mailer;
         $this->entityManager = $entityManager;

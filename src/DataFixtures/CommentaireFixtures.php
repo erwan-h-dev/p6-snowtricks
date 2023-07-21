@@ -19,10 +19,10 @@ class CommentaireFixtures extends Fixture implements DependentFixtureInterface
         $utilisateur = $utilisateurRepository->findOneBy(['username' => 'admin']);
 
         $tricks = $trickRepository->findAll();
-        
+
         foreach($tricks as $trick) {
 
-            for($i = 0; $i <= rand(1, 30); $i++){
+            for($i = 0; $i <= rand(1, 30); $i++) {
 
                 $commentaire = new Commentaire();
 
@@ -38,7 +38,7 @@ class CommentaireFixtures extends Fixture implements DependentFixtureInterface
             }
             $manager->persist($trick);
         }
-        
+
         $manager->flush();
     }
 

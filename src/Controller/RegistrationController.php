@@ -47,7 +47,9 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            $this->emailVerifier->sendEmailConfirmation(
+                'app_verify_email',
+                $user,
                 (new TemplatedEmail())
                     ->from(new Address('noreply@snowtricks.erwan-h.fr', 'SnowTricks Dev'))
                     ->to($user->getEmail())
@@ -97,14 +99,14 @@ class RegistrationController extends AbstractController
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        
+
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
 
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('registration/login.html.twig',[
+        return $this->render('registration/login.html.twig', [
             'last_username' => $lastUsername,
             'error'         => $error,
         ]);
