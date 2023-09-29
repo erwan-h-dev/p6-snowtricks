@@ -56,19 +56,19 @@
                     {# image #}
                     <img src="{{ asset(mediaFields.vars.value.path) }}" alt="" class="card-img-top image media-view" {% if mediaFields.vars.value.type == 'video' %}style="display:none;"{% endif %}>
 
-                    <div class="card-footer media-view text-end footer">
+                    <div class="card-footer media-view text-end footer" style="{% if form_errors(mediaFields.image) != "" %}display:none;{% endif %}">
                         <a class="btn btn-warning text-light edit"><i class="fa-solid fa-pen"></i></a>
                         <a class="btn btn-danger remove"><i class="fa-regular fa-trash-can"></i></a>
                     </div>
                 {# END VIEW MEDIA #}
                 
                 {# FORM EDIT MEDIA #}
-                    <div class="card-body media-form" style="display:none;">
+                    <div class="card-body media-form" style="{% if form_errors(mediaFields.image) == "" %}display:none;{% endif %}">
                         {{ form_row(mediaFields.type) }}
                         {{ form_row(mediaFields.image) }}
                         {{ form_row(mediaFields.video) }}
                     </div>
-                    <div class="card-footer media-form text-end" style="display:none;">
+                    <div class="card-footer media-form text-end" style="{% if form_errors(mediaFields.image) == "" %}display:none;{% endif %}">
                         <a class="btn btn-success save"><i class="fa-regular fa-floppy-disk"></i></a>
                     </div>
                 {# END FORM EDIT MEDIA #}

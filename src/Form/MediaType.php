@@ -30,7 +30,17 @@ class MediaType extends AbstractType
                 'label' => false,
                 'attr' => [
                     'class' => 'image-field',
-                ]
+                ],
+                'constraints' => [
+                    new \Symfony\Component\Validator\Constraints\File([
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez joindre une image valide',
+                    ])
+                ],
             ])
             ->add('video', TextType::class, [
                 'required' => false,
