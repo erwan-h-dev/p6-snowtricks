@@ -26,19 +26,19 @@ class TrickManager
         foreach ($mediasForm as $mediaForm) {
 
             $media = $mediaForm->getData();
-
             if ($media->getType() == 'image') {
 
                 $file = $mediaForm->get('image')->getData();
-
+                
                 if ($file instanceof UploadedFile) {
-
                     $fileName = $this->fileUploader->upload($file);
                     $media->setPath('images/uploads/' . $fileName);
                 }
-            } else {
 
-                $media->setPath($mediaForm->get('video')->getData());
+            } else {
+                if($mediaForm->get('video')->getData()){
+                    $media->setPath($mediaForm->get('video')->getData());
+                }
             }
         }
 
