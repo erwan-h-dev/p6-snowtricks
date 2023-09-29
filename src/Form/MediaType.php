@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Media;
-use App\Controller\DefaultController;
+use App\Service\ListService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,9 +15,11 @@ class MediaType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $listService = new ListService();
+
         $builder
             ->add('type', ChoiceType::class, [
-                'choices' => DefaultController::typeMedia(),
+                'choices' => $listService->typeMediaList(),
                 'attr' => [
                     'class' => 'type-select',
                 ]

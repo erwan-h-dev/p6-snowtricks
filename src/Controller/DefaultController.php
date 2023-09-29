@@ -16,12 +16,4 @@ class DefaultController extends AbstractController
             'tricks' => $trickRepository->findAll(),
         ]);
     }
-
-    public static function typeMedia(): array
-    {
-        return [
-            'image' => 'image',
-            'video' => 'video',
-        ];
-    }
 }
